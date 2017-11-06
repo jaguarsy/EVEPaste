@@ -1,6 +1,6 @@
-# eve-dashboard
+# eve-paste
 
-> A tool.
+> A tool for EVE.
 
 ## Build Setup
 
