@@ -1,9 +1,9 @@
 export default {
-  BAACode: 'NzRiODgyNjhkZDNjNGNmZThkZTFiZGM2NjdjNDE2ODY6IGRIT2d1MGZjTWlqb2FnMjZwdUZjMVJEVXlVNG5PaDhObHlCaGNBakY=',
-  clientId: '74b88268dd3c4cfe8de1bdc667c41686',
-  secretKey: 'dHOgu0fcMijoag26puFc1RDUyU4nOh8NlyBhcAjF',
+  BAACode: 'Y2EwZDFjNWYwOTFjNDIzN2EwNTYyZjMyOWE5MWQ4N2M6MTVjNTc2UkJLakJNMmlXaVhZQWczdUQ4Sjh1NDAzbjA4OUZYalpJeg==',
+  clientId: 'ca0d1c5f091c4237a0562f329a91d87c',
+  secretKey: '15c576RBKjBM2iWiXYAg3uD8J8u403n089FXjZIz',
   ESI_URL: 'https://esi.tech.ccp.is/latest',
-  callback: 'http://localhost:10407/callback/',
+  callback: 'http://localhost:10408/callback/',
   scopes: [
   ],
 };
