@@ -1,4 +1,4 @@
-<template xmlns:v-clipboard="http://www.w3.org/1999/xhtml">
+<template>
   <div style="height: 100vh;-webkit-app-region: drag;">
     <div class="loading-container" v-if="isLoading">
       <div class="sk-cube-grid">
@@ -22,46 +22,8 @@
                placeholder="Input anything here and press Enter.">
       </div>
 
-      <div class="container" v-if="appraisal">
-        <button type="button"
-                class="btn pull-right"
-                v-clipboard:copy="appraisalUrl"
-                v-clipboard:success="onClipboardCopy"
-                v-clipboard:error="onClipboardError">Copy to share
-        </button>
-
-        <p>
-          <span>{{format(appraisal.totals.sell)}}</span>
-          <small>&nbsp;estimated sell value</small>
-        </p>
-        <p>
-          <span>{{format(appraisal.totals.buy)}}</span>
-          <small>&nbsp;estimated buy value</small>
-        </p>
-        <p>
-          <span>{{numberFormat(appraisal.totals.volume)}}</span>
-          <small>&nbsp;total volume</small>
-        </p>
-
-        <table class="table">
-          <thead>
-          <tr>
-            <th>Qty</th>
-            <th>Item</th>
-            <th>Volume</th>
-            <th>sell/buy</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="item in appraisal.items">
-            <td>{{item.quantity}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.typeVolume}}</td>
-            <td>{{numberFormat(item.prices.sell.min)}}<br>{{numberFormat(item.prices.buy.max)}}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+      <appraisal :data="appraisal"></appraisal>
+      <kill-stats :data="killStats"></kill-stats>
     </div>
 
     <message :type="msgStore.type" :content="msgStore.content"></message>
@@ -70,20 +32,24 @@
 
 <script type="text/babel">
   import clipWatcher from './utils/clipWatcher';
-  import moneyFormat from './utils/moneyFormat';
-  import numberFormat from './utils/numberFormat';
   import praisalApi from './services/eve-praisal';
+  import kbApi from './services/eve-kb';
   import Message from './components/Message';
+  import Appraisal from './components/Appraisal';
+  import KillStats from './components/KillStats';
   import msgStore from './store/message';
 
   export default {
     name: 'app',
     components: {
       Message,
+      Appraisal,
+      KillStats,
     },
     data() {
       return {
         appraisal: null,
+        killStats: null,
         isLoading: false,
         msgStore,
       };
@@ -97,38 +63,27 @@
             .then((result) => {
               this.appraisal = result.appraisal;
               this.isLoading = false;
+              msgStore.info('价格获取成功');
             })
             .catch((err) => {
               this.appraisal = null;
-              this.isLoading = false;
               console.warn(err);
-              msgStore.danger('价格获取失败，请重试');
+
+              return kbApi(text);
+            })
+            .then((result) => {
+              this.killStats = result;
+              msgStore.info('KB数据获取成功');
+
+              this.isLoading = false;
+            })
+            .catch((err) => {
+              console.warn(err);
+
+              this.isLoading = false;
             });
         },
       });
-    },
-    computed: {
-      appraisalUrl() {
-        if (!this.appraisal) {
-          return '';
-        }
-
-        return `https://evepraisal.com/a/${this.appraisal.id}`;
-      },
-    },
-    methods: {
-      format(val) {
-        return moneyFormat(val);
-      },
-      numberFormat(val) {
-        return numberFormat(val);
-      },
-      onClipboardCopy() {
-        msgStore.info('复制成功');
-      },
-      onClipboardError() {
-        msgStore.warning('复制失败，请重试');
-      },
     },
   };
 </script>
