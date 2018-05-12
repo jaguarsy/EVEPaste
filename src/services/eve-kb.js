@@ -3,7 +3,8 @@ import axios from 'axios';
 const getIdByName = name => axios
   .get(`https://zkillboard.com/autocomplete/${encodeURIComponent(name)}/`)
   .then((result) => {
-    const first = result.data && result.data[0];
+    const list = result.data || [];
+    const first = list.find(p => p.type === 'character');
     if (first) {
       return first.id;
     }

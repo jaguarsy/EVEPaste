@@ -16,10 +16,13 @@
 
     <div :class="{'is-blur': isLoading}">
       <div class="search-bar">
-        <input type="text"
-               class="form-control"
-               tabindex="-1"
-               placeholder="Input anything here and press Enter.">
+        <form @submit.prevent="search()">
+          <input type="text"
+                 class="form-control"
+                 tabindex="-1"
+                 v-model="searchWord"
+                 placeholder="Input anything here and press Enter.">
+        </form>
       </div>
 
       <appraisal :data="appraisal"></appraisal>
@@ -51,39 +54,46 @@
         appraisal: null,
         killStats: null,
         isLoading: false,
+        searchWord: null,
         msgStore,
       };
     },
     mounted() {
       clipWatcher({
         onTextChange: (text) => {
-          this.isLoading = true;
-
-          praisalApi(text)
-            .then((result) => {
-              this.appraisal = result.appraisal;
-              this.isLoading = false;
-              msgStore.info('价格获取成功');
-            })
-            .catch((err) => {
-              this.appraisal = null;
-              console.warn(err);
-
-              return kbApi(text);
-            })
-            .then((result) => {
-              this.killStats = result;
-              msgStore.info('KB数据获取成功');
-
-              this.isLoading = false;
-            })
-            .catch((err) => {
-              console.warn(err);
-
-              this.isLoading = false;
-            });
+          this.search(text);
         },
       });
+    },
+    methods: {
+      search(text) {
+        this.isLoading = true;
+        const keyword = text || this.searchWord;
+
+        praisalApi(keyword)
+          .then((result) => {
+            this.appraisal = result.appraisal;
+            this.isLoading = false;
+            msgStore.info('价格获取成功');
+          })
+          .catch((err) => {
+            this.appraisal = null;
+            console.warn(err);
+
+            return kbApi(keyword);
+          })
+          .then((result) => {
+            this.killStats = result;
+            msgStore.info('KB数据获取成功');
+
+            this.isLoading = false;
+          })
+          .catch((err) => {
+            console.warn(err);
+
+            this.isLoading = false;
+          });
+      },
     },
   };
 </script>
