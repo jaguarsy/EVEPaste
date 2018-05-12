@@ -8,11 +8,12 @@
   "scripts": {
     "dev": "node build/dev.js",
     "start": "node build/dev-server.js",
-    "build": "node build/build.js",
+    "build": "node build/build.js && zip -r release.zip dist/",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "clipboard": "^2.0.1",
     "moment": "^2.20.1",
     "vue": "^2.5.13",
     "vue-clipboard2": "0.0.6",
