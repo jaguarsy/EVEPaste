@@ -67,9 +67,14 @@
     },
     methods: {
       search(text) {
-        this.isLoading = true;
         const keyword = text || this.searchWord;
 
+        if (!keyword || keyword.trim() === '') {
+          return;
+        }
+        console.log(keyword);
+
+        this.isLoading = true;
         praisalApi(keyword)
           .then((result) => {
             this.appraisal = result.appraisal;
@@ -84,7 +89,9 @@
           })
           .then((result) => {
             this.killStats = result;
-            msgStore.info('KB数据获取成功');
+            if (result) {
+              msgStore.info('KB数据获取成功');
+            }
 
             this.isLoading = false;
           })

@@ -13,7 +13,7 @@ const getIdByName = name => axios
 
 const getStatsById = (id) => {
   if (!id) {
-    return Promise.resolve({});
+    return Promise.resolve();
   }
 
   return axios

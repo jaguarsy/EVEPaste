@@ -9,7 +9,7 @@ Vue.use(ShortKey);
 Vue.use(VueClipboard);
 
 const startApp = () => {
-  // eslint-disable-nextline
+  // eslint-disable-next-line
   new Vue({
     el: '#app',
     render: h => h(App),
